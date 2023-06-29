@@ -69,5 +69,13 @@ def edit(id):
         return redirect(url_for('home'))
 
 
+@app.route('/delete/<int:id>')
+def delete(id):
+    exec_sql("""
+        DELETE FROM People WHERE id = ?;
+    """, (id,))
+    return redirect(url_for('home'))
+
+
 if __name__ == "__main__":
     app.run(debug=True)
