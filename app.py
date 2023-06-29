@@ -6,7 +6,12 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    """Show all surveys in database"""
+    """Show all surveys in database
+
+    Returning:
+    Home page with all surveys
+
+    """
     datas = exec_sql(
         """
         SELECT * FROM People;
@@ -125,7 +130,7 @@ def delete(id):
 
         Returns:
         redirect to home page after deleting
-        
+
         """
     exec_sql("""
         DELETE FROM People WHERE id = ?;
