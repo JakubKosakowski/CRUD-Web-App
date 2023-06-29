@@ -21,7 +21,7 @@ Home Page
             <td>{{ person['height'] }}</td>
             <td>{{ person['gender'] }}</td>
             <td>{{ person['favorite_color'] }}</td>
-            <td><a href="#"><button>Edit</button></a></td>
+            <td><a href="{{url_for('edit', id=person['id'])}}"><button>Edit</button></a></td>
             <td><a href="#"><button>Delete</button></a></td>
         </tr>
         {% endfor %}
