@@ -15,7 +15,7 @@ Home Page
             <th>Favorite color</th>
         </tr>
         {% for person in people %}
-        <tr>
+        <tr id="row-{{loop.index}}"">
             <td>{{ person['id'] }}</td>
             <td>{{ person['age'] }}</td>
             <td>{{ person['height'] }}</td>
