@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for
+from flask import Flask, render_template, request, url_for, redirect
 from database_execute import exec_sql
 
 app = Flask(__name__)
@@ -24,10 +24,21 @@ def home():
 
     return render_template('home.html', people=people)
 
+
 @app.route('/add', methods=['GET', 'POST'])
 def add():
     if request.method == 'GET':
         return render_template('add.html')
+    else:
+        age = request.form.get('age')
+        height = request.form.get('height')
+        gender = request.form.get('gender')
+        fav_color = request.form.get('favorite_color')
+        exec_sql("""
+            INSERT INTO People(age, height, gender, favorite_color)
+            VALUES (?, ?, ?, ?);
+        """, (age, height, gender, fav_color))
+        return redirect(url_for('home'))
 
 
 @app.route('/edit/<int:id>', methods=['GET', 'POST'])
@@ -45,6 +56,7 @@ def edit(id):
     }
     if request.method == 'GET':
         return render_template('edit.html', person=person)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
