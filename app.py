@@ -18,7 +18,8 @@ def home():
             'age': data[1],
             'height': data[2],
             'gender': data[3],
-            'favorite_color': data[4]
+            'favorite_color': data[4],
+            'name': data[5]
         }
         people.append(temp)
 
@@ -30,14 +31,15 @@ def add():
     if request.method == 'GET':
         return render_template('add.html')
     else:
+        name = request.form.get('name')
         age = request.form.get('age')
         height = request.form.get('height')
         gender = request.form.get('gender')
         fav_color = request.form.get('favorite_color')
         exec_sql("""
-            INSERT INTO People(age, height, gender, favorite_color)
-            VALUES (?, ?, ?, ?);
-        """, (age, height, gender, fav_color))
+            INSERT INTO People(age, height, gender, favorite_color, name)
+            VALUES (?, ?, ?, ?, ?);
+        """, (age, height, gender, fav_color, name))
         return redirect(url_for('home'))
 
 
@@ -53,19 +55,21 @@ def edit(id):
             'age': data[0][1],
             'height': data[0][2],
             'gender': data[0][3],
-            'favorite_color': data[0][4]
+            'favorite_color': data[0][4],
+            'name': data[0][5]
         }
         return render_template('edit.html', person=person)
     else:
+        name = request.form.get('name')
         age = request.form.get('age')
         height = request.form.get('height')
         gender = request.form.get('gender')
         fav_color = request.form.get('favorite_color')
         exec_sql("""
                     UPDATE People
-                    SET age = ?, height = ?, gender = ?, favorite_color = ?
+                    SET age = ?, height = ?, gender = ?, favorite_color = ?, name = ?
                     WHERE id = ?
-                """, (age, height, gender, fav_color, id))
+                """, (age, height, gender, fav_color, name, id))
         return redirect(url_for('home'))
 
 

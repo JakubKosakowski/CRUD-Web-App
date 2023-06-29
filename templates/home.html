@@ -9,14 +9,16 @@ Home Page
     <table>
         <tr>
             <th>ID</th>
+            <th>Name</th>
             <th>Age</th>
             <th>Height</th>
             <th>Gender</th>
             <th>Favorite color</th>
         </tr>
         {% for person in people %}
-        <tr id="row-{{loop.index}}"">
+        <tr id="row-{{loop.index}}">
             <td>{{ person['id'] }}</td>
+            <td>{{ person['name'] }}</td>
             <td>{{ person['age'] }}</td>
             <td>{{ person['height'] }}</td>
             <td>{{ person['gender'] }}</td>
