@@ -6,6 +6,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
+    """Show all surveys in database"""
     datas = exec_sql(
         """
         SELECT * FROM People;
@@ -28,6 +29,15 @@ def home():
 
 @app.route('/details/<int:id>')
 def details(id):
+    """Show details of selected survey
+
+    Parameters:
+    id (int): ID of database record
+
+    Returns:
+    details.html page
+
+    """
     data = exec_sql("""
                     SELECT * FROM People
                     WHERE id = ?;
@@ -45,6 +55,13 @@ def details(id):
 
 @app.route('/add', methods=['GET', 'POST'])
 def add():
+    """Add new survey
+
+        Returns:
+        add.html if method is GET
+        add record to database and redirect to home page if method is POST
+
+        """
     if request.method == 'GET':
         return render_template('add.html')
     else:
@@ -62,6 +79,15 @@ def add():
 
 @app.route('/edit/<int:id>', methods=['GET', 'POST'])
 def edit(id):
+    """Edit selected survey
+
+        Parameters:
+        id (int): ID of database record
+
+        Returns:
+        home page with edited record
+
+        """
     if request.method == 'GET':
         data = exec_sql("""
                 SELECT * FROM People
@@ -92,6 +118,15 @@ def edit(id):
 
 @app.route('/delete/<int:id>')
 def delete(id):
+    """Delete record from database
+
+        Parameters:
+        id (int): ID of database record
+
+        Returns:
+        redirect to home page after deleting
+        
+        """
     exec_sql("""
         DELETE FROM People WHERE id = ?;
     """, (id,))
