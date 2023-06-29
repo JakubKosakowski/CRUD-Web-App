@@ -43,19 +43,30 @@ def add():
 
 @app.route('/edit/<int:id>', methods=['GET', 'POST'])
 def edit(id):
-    data = exec_sql("""
-        SELECT * FROM People
-        WHERE id = ?;
-    """, (id,))
-    person = {
-        'id': data[0][0],
-        'age': data[0][1],
-        'height': data[0][2],
-        'gender': data[0][3],
-        'favorite_color': data[0][4]
-    }
     if request.method == 'GET':
+        data = exec_sql("""
+                SELECT * FROM People
+                WHERE id = ?;
+            """, (id,))
+        person = {
+            'id': data[0][0],
+            'age': data[0][1],
+            'height': data[0][2],
+            'gender': data[0][3],
+            'favorite_color': data[0][4]
+        }
         return render_template('edit.html', person=person)
+    else:
+        age = request.form.get('age')
+        height = request.form.get('height')
+        gender = request.form.get('gender')
+        fav_color = request.form.get('favorite_color')
+        exec_sql("""
+                    UPDATE People
+                    SET age = ?, height = ?, gender = ?, favorite_color = ?
+                    WHERE id = ?
+                """, (age, height, gender, fav_color, id))
+        return redirect(url_for('home'))
 
 
 if __name__ == "__main__":
