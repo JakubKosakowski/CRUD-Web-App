@@ -13,7 +13,7 @@ Home Page
         </tr>
         {% for person in people %}
         <tr id="row-{{loop.index}}">
-            <td><a href="#">{{ person['name'] }}</a></td>
+            <td><a href="{{url_for('details', id=person['id'])}}">{{ person['name'] }}</a></td>
             <td><a href="{{url_for('edit', id=person['id'])}}"><button>Edit</button></a></td>
             <td><a href="{{url_for('delete', id=person['id'])}}"><button>Delete</button></a></td>
         </tr>

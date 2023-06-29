@@ -26,6 +26,23 @@ def home():
     return render_template('home.html', people=people)
 
 
+@app.route('/details/<int:id>')
+def details(id):
+    data = exec_sql("""
+                    SELECT * FROM People
+                    WHERE id = ?;
+                """, (id,))
+    person = {
+        'id': data[0][0],
+        'age': data[0][1],
+        'height': data[0][2],
+        'gender': data[0][3],
+        'favorite_color': data[0][4],
+        'name': data[0][5]
+    }
+    return render_template('details.html', person=person)
+
+
 @app.route('/add', methods=['GET', 'POST'])
 def add():
     if request.method == 'GET':
