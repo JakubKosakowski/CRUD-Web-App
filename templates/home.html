@@ -5,5 +5,11 @@ Home Page
 {% endblock %}
 
 {% block content %}
-<p>Hello World!</p>
+    {% for person in people %}
+        <p>{{ person['age'] }}</p>
+        <p>{{ person['height'] }}</p>
+        <p>{{ person['gender'] }}</p>
+        <p>{{ person['favorite_color'] }}</p>
+        <p>--------------------------</p>
+    {% endfor %}
 {% endblock %}
