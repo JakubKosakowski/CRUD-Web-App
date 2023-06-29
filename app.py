@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, url_for
 from database_execute import exec_sql
 
 app = Flask(__name__)
@@ -24,6 +24,10 @@ def home():
 
     return render_template('home.html', people=people)
 
+@app.route('/add', methods=['GET', 'POST'])
+def add():
+    if request.method == 'GET':
+        return render_template('add.html')
 
 if __name__ == "__main__":
     app.run(debug=True)

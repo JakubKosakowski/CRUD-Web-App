@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Add new survey
+{% endblock %}
+
+{% block content %}
+<h1>Add new survey</h1>
+<form action="" method="POST">
+  <label for="age">Age: </label>
+  <input type="number" name="age" id="age"><br><br>
+  <label for="height">Height: </label>
+  <input type="number" name="height" id="height"><br><br>
+  Gender:
+  <input type="radio" id="Male" name="gender" value="Male">
+  <label for="Male">Male</label>
+  <input type="radio" id="Female" name="gender" value="Female">
+  <label for="Female">Female</label><br><br>
+  <label for="favorite_color">Favorite color:</label>
+  <input type="text" name="favorite_color" id="favorite_color"><br><br>
+  <input type="submit" value="Add">
+</form>
+{% endblock %}
