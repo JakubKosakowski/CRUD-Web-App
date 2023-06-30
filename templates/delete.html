@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Delete survey
+{% endblock %}
+
+{% block content %}
+<form action='' method="post">
+    Click YES to confirm
+    <input type = "submit" value="YES">
+    <a href='{{url_for("home")}}'>Cancel</a>
+</form>
+{% endblock %}

@@ -1,61 +1,21 @@
 from flask import Flask, render_template, request, url_for, redirect
-from database_execute import exec_sql
+from models import db, SurveyModel
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db.init_app(app)
+
+
+@app.before_request
+def create_table():
+    db.create_all()
 
 
 @app.route('/')
 def home():
-    """Show all surveys in database
-
-    Returning:
-    Home page with all surveys
-
-    """
-    datas = exec_sql(
-        """
-        SELECT * FROM People;
-        """
-    )
-    people = list()
-    for data in datas:
-        temp = {
-            'id': data[0],
-            'age': data[1],
-            'height': data[2],
-            'gender': data[3],
-            'favorite_color': data[4],
-            'name': data[5]
-        }
-        people.append(temp)
-
-    return render_template('home.html', people=people)
-
-
-@app.route('/details/<int:id>')
-def details(id):
-    """Show details of selected survey
-
-    Parameters:
-    id (int): ID of database record
-
-    Returns:
-    details.html page
-
-    """
-    data = exec_sql("""
-                    SELECT * FROM People
-                    WHERE id = ?;
-                """, (id,))
-    person = {
-        'id': data[0][0],
-        'age': data[0][1],
-        'height': data[0][2],
-        'gender': data[0][3],
-        'favorite_color': data[0][4],
-        'name': data[0][5]
-    }
-    return render_template('details.html', person=person)
+    surveys = SurveyModel.query.all()
+    return render_template('home.html', surveys=surveys)
 
 
 @app.route('/add', methods=['GET', 'POST'])
@@ -75,11 +35,24 @@ def add():
         height = request.form.get('height')
         gender = request.form.get('gender')
         fav_color = request.form.get('favorite_color')
-        exec_sql("""
-            INSERT INTO People(age, height, gender, favorite_color, name)
-            VALUES (?, ?, ?, ?, ?);
-        """, (age, height, gender, fav_color, name))
+        survey = SurveyModel(name=name, age=age, height=height, gender=gender, favorite_color=fav_color)
+        db.session.add(survey)
+        db.session.commit()
         return redirect(url_for('home'))
+
+@app.route('/details/<int:id>')
+def details(id):
+    """Show details of selected survey
+
+    Parameters:
+    id (int): ID of database record
+
+    Returns:
+    details.html page
+
+    """
+    survey = SurveyModel.query.filter_by(id=id).first()
+    return render_template('details.html', survey=survey)
 
 
 @app.route('/edit/<int:id>', methods=['GET', 'POST'])
@@ -93,35 +66,27 @@ def edit(id):
         home page with edited record
 
         """
-    if request.method == 'GET':
-        data = exec_sql("""
-                SELECT * FROM People
-                WHERE id = ?;
-            """, (id,))
-        person = {
-            'id': data[0][0],
-            'age': data[0][1],
-            'height': data[0][2],
-            'gender': data[0][3],
-            'favorite_color': data[0][4],
-            'name': data[0][5]
-        }
-        return render_template('edit.html', person=person)
-    else:
-        name = request.form.get('name')
-        age = request.form.get('age')
-        height = request.form.get('height')
-        gender = request.form.get('gender')
-        fav_color = request.form.get('favorite_color')
-        exec_sql("""
-                    UPDATE People
-                    SET age = ?, height = ?, gender = ?, favorite_color = ?, name = ?
-                    WHERE id = ?
-                """, (age, height, gender, fav_color, name, id))
-        return redirect(url_for('home'))
+    survey = SurveyModel.query.filter_by(id=id).first()
+    if request.method == 'POST':
+        if survey:
+            db.session.delete(survey)
+            db.session.commit()
+
+            name = request.form.get('name')
+            age = request.form.get('age')
+            height = request.form.get('height')
+            gender = request.form.get('gender')
+            fav_color = request.form.get('favorite_color')
+            survey = SurveyModel(name=name, age=age, height=height, gender=gender, favorite_color=fav_color)
+
+            db.session.add(survey)
+            db.session.commit()
+            return redirect(url_for('details', id=id))
+        return f'Survey with id = {id} does not exist'
+    return render_template('edit.html', survey=survey)
 
 
-@app.route('/delete/<int:id>')
+@app.route('/delete/<int:id>', methods=['GET', 'POST'])
 def delete(id):
     """Delete record from database
 
@@ -132,10 +97,14 @@ def delete(id):
         redirect to home page after deleting
 
         """
-    exec_sql("""
-        DELETE FROM People WHERE id = ?;
-    """, (id,))
-    return redirect(url_for('home'))
+    survey = SurveyModel.query.filter_by(id=id).first()
+    if request.method == 'POST':
+        if survey:
+            db.session.delete(survey)
+            db.session.commit()
+            return redirect(url_for('home'))
+        return f"This survey is already deleted or this survey never existed"
+    return render_template('delete.html')
 
 
 if __name__ == "__main__":

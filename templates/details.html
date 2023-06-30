@@ -8,16 +8,16 @@ Details of survey
 <h1>Details of survey</h1>
 <a href="{{url_for('home')}}"><button>Back</button></a><br><br>
 <label for="name">Age: </label>
-<input type="text" name="name" id="name" value="{{person['name']}}" readonly><br><br>
+<input type="text" name="name" id="name" value="{{survey.name}}" readonly><br><br>
 <label for="age">Age: </label>
-<input type="number" name="age" id="age" value="{{person['age']}}" readonly><br><br>
+<input type="number" name="age" id="age" value="{{survey.age}}" readonly><br><br>
 <label for="height">Height: </label>
-<input type="number" name="height" id="height" value="{{person['height']}}" readonly><br><br>
+<input type="number" name="height" id="height" value="{{survey.height}}" readonly><br><br>
 Gender:
-<input type="radio" id="Male" name="gender" value="Male" {% if person['gender'] == 'Male' %}checked{% endif %} disabled>
+<input type="radio" id="Male" name="gender" value="Male" {% if survey.gender == 'Male' %}checked{% endif %} disabled>
 <label for="Male">Male</label>
-<input type="radio" id="Female" name="gender" value="Female" {% if person['gender'] == 'Female' %}checked{% endif %} disabled>
+<input type="radio" id="Female" name="gender" value="Female" {% if survey.gender == 'Female' %}checked{% endif %} disabled>
 <label for="Female">Female</label><br><br>
 <label for="favorite_color">Favorite color:</label>
-<input type="text" name="favorite_color" id="favorite_color" value="{{person['favorite_color']}}" readonly>
+<input type="text" name="favorite_color" id="favorite_color" value="{{survey.favorite_color}}" readonly>
 {% endblock %}
