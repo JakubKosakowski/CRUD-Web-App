@@ -20,4 +20,11 @@ Home Page
         </tr>
         {% endfor %}
     </table>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        const btn = document.querySelector('.refresh');
+        btn.addEventListener("click", function(){
+           $( ".list" ).load("/ .list");
+        });
+    </script>
 {% endblock %}
