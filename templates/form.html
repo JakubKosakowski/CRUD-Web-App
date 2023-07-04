@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block content %}
+<h1>{{title}}</h1>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for message in messages %}
+      <p style="color: red;">{{ message }}</p>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+<form action="" method="POST" id="form">
+  <label for="name">Name: </label>
+  <input type="text" name="name" id="name" {% if form_type == "edit" %} value="{{survey.name}}" {% endif %}><br><br>
+  <label for="age">Age: </label>
+  <input type="number" name="age" id="age" {% if form_type == "edit" %} value="{{survey.age}}" {% endif %}><br><br>
+  <label for="height">Height: </label>
+  <input type="number" name="height" id="height" {% if form_type == "edit" %} value="{{survey.height}}" {% endif %}><br><br>
+  Gender:
+  <input type="radio" id="Male" name="gender" value="Male" {% if form_type == "edit" %}{% if survey.gender == 'Male' %}checked{% endif %}{% endif %}>
+  <label for="Male">Male</label>
+  <input type="radio" id="Female" name="gender" value="Female" {% if form_type == "edit" %}{% if survey.gender == 'Female' %}checked{% endif %}{% endif %}>
+  <label for="Female">Female</label><br><br>
+  <label for="favorite_color">Favorite color:</label>
+  <input type="text" name="favorite_color" id="favorite_color" {% if form_type == "edit" %} value="{{survey.favorite_color}}" {% endif %}>
+  <button class="random" name="draw" type="button">Draw</button><br><br>
+  <input type="submit" value="{% if form_type == 'edit' %}Edit{% else %}Add{% endif %}">
+</form>
+<script src="{{url_for('static', filename='script.js')}}"></script>
+{% endblock %}
